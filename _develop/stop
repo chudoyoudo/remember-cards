@@ -1,0 +1,10 @@
+#!/bin/bash
+
+pwd=$PWD
+curFolder=${pwd: -8}
+
+if [ "$curFolder" = "_develop" ]; then
+    docker-compose down
+else
+    docker-compose -f _develop/docker-compose.yml down
+fi

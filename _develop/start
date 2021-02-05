@@ -1,0 +1,14 @@
+#!/bin/bash
+
+pwd=$PWD
+curFolder=${pwd: -8}
+
+if [ "$curFolder" = "_develop" ]; then
+    docker-compose pull
+    docker-compose up -d
+    sudo chmod -R 777 ../
+else
+    docker-compose -f _develop/docker-compose.yml pull
+    docker-compose -f _develop/docker-compose.yml --project-directory ./_develop up -d
+    sudo chmod -R 777 ./
+fi
