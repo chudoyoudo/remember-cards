@@ -23,7 +23,7 @@ func (u *usecase) Add(q *Question) (*Question, error) {
     return qr, nil
 }
 
-func (u *usecase) getDao() (Dao) {
+func (u *usecase) getDao() Dao {
     if u.dao == nil {
         container.Make(&u.dao)
     }
