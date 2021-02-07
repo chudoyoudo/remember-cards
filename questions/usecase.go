@@ -1,6 +1,8 @@
 package questions
 
-import "github.com/golobby/container"
+import (
+    "github.com/golobby/container"
+)
 
 type Usecase interface {
     Add(q *Question) (*Question, error)
@@ -11,22 +13,19 @@ type usecase struct {
 }
 
 func (u *usecase) Add(q *Question) (*Question, error) {
-    dao, err := u.getDao()
+    dao := u.getDao()
+
+    qr, err := dao.Create(q)
     if err != nil {
         return nil, err
     }
 
-    r, err := dao.Create(q)
-    if err != nil {
-        return nil, err
-    }
-
-    return r, nil
+    return qr, nil
 }
 
-func (u *usecase) getDao() (Dao, error) {
+func (u *usecase) getDao() (Dao) {
     if u.dao == nil {
         container.Make(&u.dao)
     }
-    return u.dao, nil
+    return u.dao
 }
