@@ -32,8 +32,7 @@ func main() {
 
     var u questions.Usecase
     container.Make(&u)
-    q, err := u.Add(q)
-
+    err := u.Add(q)
     if err != nil {
         log.Fatalln(err)
     }

@@ -2,6 +2,7 @@ package postgres
 
 import (
     "github.com/golobby/container"
+    "github.com/pkg/errors"
     "gorm.io/gorm"
 
     "github.com/chudoyoudo/remember-cards/questions"
@@ -11,15 +12,15 @@ type dao struct {
     c *gorm.DB
 }
 
-func (dao *dao) Create(q *questions.Question) (*questions.Question, error) {
+func (dao *dao) Create(q *questions.Question) error {
     c := dao.getConnection()
 
     result := c.Create(q)
     if result.Error != nil {
-        return nil, result.Error
+        return errors.Wrap(result.Error, "Can't create question via gorm")
     }
 
-    return q, nil
+    return nil
 }
 
 func (dao *dao) getConnection() *gorm.DB {

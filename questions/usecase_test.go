@@ -1,9 +1,10 @@
 package questions
 
 import (
-    "errors"
     "testing"
 
+    "github.com/pkg/errors"
+    "github.com/stretchr/testify/assert"
     "github.com/stretchr/testify/mock"
     "github.com/stretchr/testify/require"
 )
@@ -12,38 +13,39 @@ type daoMock struct {
     mock.Mock
 }
 
-func (m *daoMock) Create(q *Question) (*Question, error) {
+func (m *daoMock) Create(q *Question) error {
     args := m.Called(q)
-    return args.Get(0).(*Question), args.Error(1)
+    return args.Error(0)
 }
 
-func TestAddQuestionWithDaoSuccess(t *testing.T) {
+func Test_usecase_add_question_when_dao_ok(t *testing.T) {
     qIn := &Question{ID: 0}
-    qOut := &Question{ID: 1}
+    qExpected := &Question{ID: 1}
 
     dao := &daoMock{}
-    dao.On("Create", qIn).Return(qOut, nil)
     u := usecase{dao: dao}
+    dao.On("Create", qIn).Return(nil).Run(func(args mock.Arguments) {
+        qIn := args.Get(0).(*Question)
+        qIn.ID = 1
+    })
 
-    qResult, errResult := u.Add(qIn)
+    errResult := u.Add(qIn)
 
-    require.Equal(t, nil, errResult, "dao вернул пустую ошибку, однако usecase вернул не пустую ошибку")
-    require.Equal(t, qOut, qResult, "usecase вернул не тот объект question, который вернул dao")
-    dao.AssertCalled(t, "Create", qIn)
+    dao.AssertNumberOfCalls(t, "Create", 1)
+    assert.Nil(t, nil, errResult, "Ошибка должна быть пустой")
+    assert.Equal(t, qExpected, qIn, "Объект вопроса не содержит изменений, которые в него внес dao")
 }
 
-func TestAddQuestionWithDaoFail(t *testing.T) {
-    var qEmpty *Question
+func Test_usecase_add_question_when_dao_failed(t *testing.T) {
     qIn := &Question{ID: 0}
-    errOut := errors.New("Test error")
+    daoErr := errors.New("Dao mock error")
 
     dao := &daoMock{}
-    dao.On("Create", qIn).Return(qEmpty, errOut)
+    dao.On("Create", qIn).Return(daoErr)
     u := usecase{dao: dao}
 
-    qResult, errResult := u.Add(qIn)
+    errResult := u.Add(qIn)
 
-    require.Equal(t, errOut, errResult, "usecase вернул не ту ошибку, которую вернул dao")
-    require.Equal(t, qEmpty, qResult, "usecase вернул не пустой объект question")
-    dao.AssertCalled(t, "Create", qIn)
+    dao.AssertNumberOfCalls(t, "Create", 1)
+    require.ErrorIs(t, errResult, daoErr, "qwe")
 }
