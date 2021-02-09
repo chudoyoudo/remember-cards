@@ -47,5 +47,5 @@ func Test_usecase_add_question_when_dao_failed(t *testing.T) {
     errResult := u.Add(qIn)
 
     dao.AssertNumberOfCalls(t, "Create", 1)
-    require.ErrorIs(t, errResult, daoErr, "Результирующая ошибка не содержащая информации об ошибках из dao")
+    require.ErrorIs(t, errResult, daoErr, "Результирующая ошибка не содержит информации об ошибках из dao")
 }
