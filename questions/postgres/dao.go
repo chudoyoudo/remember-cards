@@ -12,10 +12,7 @@ type dao struct {
 }
 
 func (dao *dao) Create(q *questions.Question) (*questions.Question, error) {
-    c, err := dao.getConnection()
-    if err != nil {
-        return nil, err
-    }
+    c := dao.getConnection()
 
     result := c.Create(q)
     if result.Error != nil {
@@ -25,9 +22,9 @@ func (dao *dao) Create(q *questions.Question) (*questions.Question, error) {
     return q, nil
 }
 
-func (dao *dao) getConnection() (*gorm.DB, error) {
+func (dao *dao) getConnection() *gorm.DB {
     if dao.c == nil {
         container.Make(&dao.c)
     }
-    return dao.c, nil
+    return dao.c
 }
