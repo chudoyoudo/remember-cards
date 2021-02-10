@@ -1,6 +1,4 @@
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
-github.com/chudoyoudo/gorm-interface v0.0.0-20210210164138-eac4a989e958 h1:z6z9Dj3DM2HCv3X6lE8Hcwu3ZdmnJhYnod8XeyFbXi0=
-github.com/chudoyoudo/gorm-interface v0.0.0-20210210164138-eac4a989e958/go.mod h1:FihNUOTHMqyuVIR82gFejsPctryI0WCyj6H2pirEhH4=
 github.com/chudoyoudo/gorm-interface v0.1.0 h1:Id+NsswNxKnFzO3DpA47ZBNQMfvn7SILnxICcIP5PXE=
 github.com/chudoyoudo/gorm-interface v0.1.0/go.mod h1:YO586IEmsZWeGZBv+QxgA2ZgFj27PZJaedn9ylDfEHU=
 github.com/cockroachdb/apd v1.1.0 h1:3LFP3629v+1aKXU5Q37mxmRxX/pIu1nijXydLShEq5I=
