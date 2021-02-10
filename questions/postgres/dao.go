@@ -1,15 +1,15 @@
 package postgres
 
 import (
+    gorm "github.com/chudoyoudo/gorm-interface"
     "github.com/golobby/container"
     "github.com/pkg/errors"
-    "gorm.io/gorm"
 
     "github.com/chudoyoudo/remember-cards/questions"
 )
 
 type dao struct {
-    c *gorm.DB
+    c gorm.Connection
 }
 
 func (dao *dao) Create(q *questions.Question) error {
@@ -23,7 +23,7 @@ func (dao *dao) Create(q *questions.Question) error {
     return nil
 }
 
-func (dao *dao) getConnection() *gorm.DB {
+func (dao *dao) getConnection() gorm.Connection {
     if dao.c == nil {
         container.Make(&dao.c)
     }
