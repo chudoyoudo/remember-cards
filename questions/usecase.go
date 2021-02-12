@@ -1,6 +1,8 @@
 package questions
 
 import (
+    "time"
+
     "github.com/golobby/container"
     "github.com/pkg/errors"
 )
@@ -11,11 +13,15 @@ type Usecase interface {
 
 type usecase struct {
     dao Dao
+    now time.Time
 }
 
 func (u *usecase) Add(q *Question) error {
-    dao := u.getDao()
+    q.Step = 1
+    q.RepeatTime = u.getRepeatTime(q.Step)
+    q.IsFailed = false
 
+    dao := u.getDao()
     err := dao.Create(q)
     if err != nil {
         return errors.Wrap(err, "Can't create question via dao")
@@ -29,4 +35,26 @@ func (u *usecase) getDao() Dao {
         container.Make(&u.dao)
     }
     return u.dao
+}
+
+func (u *usecase) getNow() time.Time {
+    var emptyTime time.Time
+    if u.now == emptyTime {
+        return time.Now()
+    }
+    return u.now
+}
+
+func (u *usecase) getRepeatTime(step uint8) time.Time {
+    now := u.getNow()
+    switch step {
+    case 1:
+        return now.Add(time.Minute * 30)
+    case 2:
+        return now.Add(time.Hour * 24 * 14)
+    case 3:
+        return now.Add(time.Hour * 24 * 60)
+    default:
+        return now.Add(time.Hour * 24 * 90)
+    }
 }

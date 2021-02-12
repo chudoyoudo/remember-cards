@@ -1,17 +1,18 @@
 package main
 
 import (
-    "fmt"
     "log"
     "os"
-    "time"
 
     gorm_interface "github.com/chudoyoudo/gorm-interface"
     "github.com/golobby/container"
     "gorm.io/driver/postgres"
     "gorm.io/gorm"
 
+    "github.com/gin-gonic/gin"
+
     "github.com/chudoyoudo/remember-cards/questions"
+    question_gin "github.com/chudoyoudo/remember-cards/questions/gin"
     _ "github.com/chudoyoudo/remember-cards/questions/postgres"
 )
 
@@ -20,25 +21,18 @@ func init() {
 }
 
 func main() {
+    RunHttpServer()
+}
 
-    q := &questions.Question{
-        Title:      "title",
-        Body:       "body",
-        GroupId:    1,
-        UserId:     2,
-        IsFailed:   true,
-        RepeatTime: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
-        Step:       3,
-    }
-
-    var u questions.Usecase
-    container.Make(&u)
-    err := u.Add(q)
-    if err != nil {
+// Метод запускает http сервер
+func RunHttpServer() {
+    r := gin.New()
+    r.Use(gin.Recovery())
+    r.Use(gin.Logger())
+    question_gin.RegisterHandlers(r)
+    if err := r.Run(":8080"); err != nil {
         log.Fatalln(err)
     }
-
-    fmt.Println(q.ID)
 }
 
 func initPostgres() {
