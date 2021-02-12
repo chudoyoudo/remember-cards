@@ -27,8 +27,8 @@ func Test_dao_create_question_when_connection_ok(t *testing.T) {
     errResult := dao.Create(qIn)
 
     c.AssertNumberOfCalls(t, "Create", 1)
-    assert.Nil(t, errResult)
-    assert.Equal(t, qExpected, qIn, "Объект вопроса не содержит изменений, которые в него внес connection")
+    assert.Nil(t, errResult, "Возвращаемая ошибка должна быть пустой")
+    assert.Equal(t, qExpected.ID, qIn.ID, "ID не заполнен")
 }
 
 func Test_dao_create_question_when_connection_failed(t *testing.T) {
@@ -42,5 +42,5 @@ func Test_dao_create_question_when_connection_failed(t *testing.T) {
     errResult := dao.Create(qIn)
 
     c.AssertNumberOfCalls(t, "Create", 1)
-    require.ErrorIs(t, errResult, connectionErr, "Результирующая ошибка не содержит информации об ошибках из connection")
+    require.ErrorIs(t, errResult, connectionErr, "Результирующая ошибка должна содержать информацию из connection")
 }
