@@ -4,7 +4,6 @@ import (
     "log"
     "os"
 
-    gorm_interface "github.com/chudoyoudo/gorm-interface"
     "github.com/golobby/container"
     "gorm.io/driver/postgres"
     "gorm.io/gorm"
@@ -36,7 +35,7 @@ func RunHttpServer() {
 }
 
 func initPostgres() {
-    container.Singleton(func() gorm_interface.Connection {
+    container.Singleton(func() *gorm.DB {
         dsn, found := os.LookupEnv("POSTGRES_DSN")
         if !found {
             dsn = "host=localhost port=5432 user=postgres password=123 dbname=rc"
