@@ -15,7 +15,7 @@ func (dao *dao) Create(q *questions.Question) error {
     result := dao.getConnection().Create(q)
     err := result.Error()
     if err != nil {
-        return errors.Wrapf(err, "Can't create question via gorm %v", *q)
+        return errors.Wrapf(err, "Can't create question via connection %v", *q)
     }
     return nil
 }
@@ -24,7 +24,7 @@ func (dao *dao) Update(q *questions.Question) error {
     result := dao.getConnection().Save(q)
     err := result.Error()
     if err != nil {
-        return errors.Wrapf(err, "Can't update question via gorm %v", *q)
+        return errors.Wrapf(err, "Can't update question via connection %v", *q)
     }
     return nil
 }
@@ -33,7 +33,7 @@ func (dao *dao) Delete(conds ...interface{}) error {
     result := dao.getConnection().Delete(&questions.Question{}, conds...)
     err := result.Error()
     if err != nil {
-        return errors.Wrapf(err, "Can't delete question via gorm by conds %v", conds)
+        return errors.Wrapf(err, "Can't delete question via connection by conds %v", conds)
     }
     return nil
 }
@@ -60,7 +60,7 @@ func (dao *dao) Find(conds []interface{}, order []interface{}, limit, offset int
 
     err = result.Error()
     if err != nil {
-        return &ql, false, errors.Wrapf(err, "Can't find question via gorm by conds %v", conds)
+        return &ql, false, errors.Wrapf(err, "Can't find question via connection by conds %v", conds)
     }
 
     more = false
