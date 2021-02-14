@@ -10,6 +10,8 @@ import (
 type Usecase interface {
 	Add(q *Question) error
 	Correct(q *Question) error
+	Delete(conds []interface{}) error
+	Find(conds []interface{}, order []interface{}, limit, offset int) (list *[]Question, more bool, err error)
 }
 
 type usecase struct {
@@ -46,6 +48,24 @@ func (u *usecase) Correct(q *Question) error {
 		return errors.Wrap(err, "Can't update question via dao")
 	}
 	return nil
+}
+
+func (u *usecase) Delete(conds []interface{}) error {
+	dao := u.getDao()
+	err := dao.Delete(conds...)
+	if err != nil {
+		return errors.Wrapf(err, "Can't delete question via dao by conds %v", conds)
+	}
+	return nil
+}
+
+func (u *usecase) Find(conds []interface{}, order []interface{}, limit, offset int) (list *[]Question, more bool, err error) {
+	dao := u.getDao()
+	list, more, err = dao.Find(conds, order, limit, offset)
+	if err != nil {
+		return list, more, errors.Wrapf(err, "Can't delete question via dao by conds %v", conds)
+	}
+	return list, more, err
 }
 
 func (u *usecase) getDao() Dao {
