@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/chudoyoudo/errors-formatter v0.1.0
-	github.com/chudoyoudo/gorm-interface v0.4.0
+	github.com/chudoyoudo/gorm-interface v0.6.0
 	github.com/gin-gonic/gin v1.6.3
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/golobby/container v1.3.0
