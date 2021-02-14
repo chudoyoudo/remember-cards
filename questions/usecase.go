@@ -17,6 +17,10 @@ type usecase struct {
 }
 
 func (u *usecase) Add(q *Question) error {
+    originalStep := q.Step
+    originalRepeatTime := q.RepeatTime
+    originalIsFailed := q.IsFailed
+    
     q.Step = 1
     q.RepeatTime = u.getRepeatTime(q.Step)
     q.IsFailed = false
@@ -24,6 +28,9 @@ func (u *usecase) Add(q *Question) error {
     dao := u.getDao()
     err := dao.Create(q)
     if err != nil {
+        q.Step = originalStep
+        q.RepeatTime = originalRepeatTime
+        q.IsFailed = originalIsFailed
         return errors.Wrap(err, "Can't create question via dao")
     }
 

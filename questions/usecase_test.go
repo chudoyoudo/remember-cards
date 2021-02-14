@@ -19,38 +19,40 @@ func (m *daoMock) Create(q *Question) error {
     return args.Error(0)
 }
 
-func Test_usecase_add_question_success(t *testing.T) {
-    now := time.Now()
-    qExpected := &Question{ID: 1}
-    qIn := &Question{
-        ID:         0,
-        Step:       255,
-        IsFailed:   true,
-        RepeatTime: now,
-    }
+// -------------
+// ---- Add ----
+// -------------
+
+func Test_usecase_add_dao_calls_is_correct(t *testing.T) {
+    qIn := &Question{}
 
     dao := &daoMock{}
-    u := usecase{
-        dao: dao,
-        now: now,
+    dao.On("Create", qIn).Return(nil)
+    u := usecase{dao: dao}
+
+    _ = u.Add(qIn)
+
+    createCalls := 1
+    if !dao.AssertNumberOfCalls(t, "Create", createCalls) {
+        t.Errorf("Метод Create у dao должен вызваться %d раз", createCalls)
+        t.Fail()
     }
-    dao.On("Create", qIn).Return(nil).Run(func(args mock.Arguments) {
-        qIn := args.Get(0).(*Question)
-        qIn.ID = 1
-    })
+}
+
+func Test_usecase_add_when_dao_work_success_result_error_is_empty(t *testing.T) {
+    qIn := &Question{}
+
+    dao := &daoMock{}
+    dao.On("Create", qIn).Return(nil)
+    u := usecase{dao: dao}
 
     errResult := u.Add(qIn)
 
-    dao.AssertNumberOfCalls(t, "Create", 1)
-    assert.Nil(t, nil, errResult, "Возвращаемая ошибка должна быть пустой")
-    assert.Equal(t, qExpected.ID, qIn.ID, "ID должен быть заполнен")
-    assert.Equal(t, uint8(1), qIn.Step, "Step должен быть 1")
-    assert.Equal(t, false, qIn.IsFailed, "Флаг IsFailed должен быть false")
-    assert.Equal(t, now.Add(time.Minute*30), qIn.RepeatTime, "RepeatTime должно быть +30 минут от текущего времени")
+    assert.Nil(t, errResult, "Возвращаемая ошибка должна быть пустой")
 }
 
-func Test_usecase_add_question_when_dao_failed(t *testing.T) {
-    qIn := &Question{ID: 0}
+func Test_usecase_add_dao_work_wrong_result_error_not_empty_and_have_info_from_connection(t *testing.T) {
+    qIn := &Question{}
     daoErr := errors.New("Dao mock error")
 
     dao := &daoMock{}
@@ -59,6 +61,51 @@ func Test_usecase_add_question_when_dao_failed(t *testing.T) {
 
     errResult := u.Add(qIn)
 
-    dao.AssertNumberOfCalls(t, "Create", 1)
-    require.ErrorIs(t, errResult, daoErr, "Результирующая ошибка не содержит информации об ошибках из dao")
+    require.NotNil(t, errResult, "Возвращаемая ошибка не должна быть пустой")
+    require.ErrorIs(t, errResult, daoErr, "Возвращаемая ошибка должна содержать информацию из dao")
+}
+
+func Test_usecase_add_dao_set_correct_default_values_for_question(t *testing.T) {
+    now := time.Now()
+    qIn := &Question{
+        Step:       255,
+        IsFailed:   true,
+        RepeatTime: now,
+    }
+
+    dao := &daoMock{}
+    dao.On("Create", qIn).Return(nil)
+    u := usecase{
+        dao: dao,
+        now: now,
+    }
+
+    _ = u.Add(qIn)
+
+    assert.Equal(t, uint8(1), qIn.Step, "Step должен быть 1")
+    assert.Equal(t, false, qIn.IsFailed, "Флаг IsFailed должен быть false")
+    assert.Equal(t, now.Add(time.Minute*30), qIn.RepeatTime, "RepeatTime должно быть +30 минут от текущего времени")
+}
+
+func Test_usecase_add_when_dao_work_wrong_set_original_values_for_question(t *testing.T) {
+    now := time.Now()
+    daoErr := errors.New("Dao mock error")
+    qIn := &Question{
+        Step:       255,
+        IsFailed:   true,
+        RepeatTime: now,
+    }
+
+    dao := &daoMock{}
+    dao.On("Create", qIn).Return(daoErr)
+    u := usecase{
+        dao: dao,
+        now: now,
+    }
+
+    _ = u.Add(qIn)
+
+    assert.Equal(t, uint8(255), qIn.Step, "Step должен быть 1")
+    assert.Equal(t, true, qIn.IsFailed, "Флаг IsFailed должен быть false")
+    assert.Equal(t, now, qIn.RepeatTime, "RepeatTime должно быть +30 минут от текущего времени")
 }
