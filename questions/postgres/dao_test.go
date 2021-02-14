@@ -16,7 +16,23 @@ import (
 // ---- Create ----
 // ----------------
 
-func Test_create_when_connection_work_success_result_error_is_empty(t *testing.T) {
+func Test_dao_create_connection_calls_is_correct(t *testing.T) {
+    qIn := &questions.Question{}
+
+    c := &gorm.ConnectionMock{}
+    c.On("Create", qIn).Return(c)
+    dao := &dao{c: c}
+
+    _ = dao.Create(qIn)
+
+    createCalls := 1
+    if !c.AssertNumberOfCalls(t, "Create", createCalls) {
+        t.Errorf("Метод Create у connection должен вызваться %d раз", createCalls)
+        t.Fail()
+    }
+}
+
+func Test_dao_create_when_connection_work_success_result_error_is_empty(t *testing.T) {
     qIn := &questions.Question{}
 
     c := &gorm.ConnectionMock{}
@@ -25,13 +41,10 @@ func Test_create_when_connection_work_success_result_error_is_empty(t *testing.T
 
     errResult := dao.Create(qIn)
 
-    if !c.AssertNumberOfCalls(t, "Create", 1) {
-        t.Fail()
-    }
     assert.Nil(t, errResult, "Возвращаемая ошибка должна быть пустой")
 }
 
-func Test_create_when_connection_work_success_we_have_correct_result_question(t *testing.T) {
+func Test_dao_create_when_connection_work_success_we_have_correct_result_question(t *testing.T) {
     qIn := &questions.Question{}
     qExpected := &questions.Question{ID: 1}
 
@@ -44,9 +57,6 @@ func Test_create_when_connection_work_success_we_have_correct_result_question(t 
 
     _ = dao.Create(qIn)
 
-    if !c.AssertNumberOfCalls(t, "Create", 1) {
-        t.Fail()
-    }
     assert.Equal(t, qExpected.ID, qIn.ID, "Результируещий объект question должен содержать данные, пришедшие из connection")
 }
 
@@ -60,9 +70,6 @@ func Test_dao_create_when_connection_work_wrong_result_error_not_empty_and_have_
 
     errResult := dao.Create(qIn)
 
-    if !c.AssertNumberOfCalls(t, "Create", 1) {
-        t.Fail()
-    }
     require.NotNil(t, errResult, "Возвращаемая ошибка не должна быть пустой")
     assert.ErrorIs(t, errResult, connectionErr, "Возвращаемая ошибка должна содержать информацию из connection")
 }
@@ -70,6 +77,22 @@ func Test_dao_create_when_connection_work_wrong_result_error_not_empty_and_have_
 // ----------------
 // ---- Update ----
 // ----------------
+
+func Test_dao_update_connection_calls_is_correct(t *testing.T) {
+    qIn := &questions.Question{}
+
+    c := &gorm.ConnectionMock{}
+    c.On("Save", qIn).Return(c)
+    dao := &dao{c: c}
+
+    _ = dao.Update(qIn)
+
+    saveCalls := 1
+    if !c.AssertNumberOfCalls(t, "Save", saveCalls) {
+        t.Errorf("Метод Save у connection должен вызваться %d раз", saveCalls)
+        t.Fail()
+    }
+}
 
 func Test_dao_update_when_connection_work_success_result_error_is_empty(t *testing.T) {
     qIn := &questions.Question{}
@@ -80,9 +103,6 @@ func Test_dao_update_when_connection_work_success_result_error_is_empty(t *testi
 
     errResult := dao.Update(qIn)
 
-    if !c.AssertNumberOfCalls(t, "Save", 1) {
-        t.Fail()
-    }
     assert.Nil(t, errResult, "Возвращаемая ошибка должна быть пустой")
 }
 
@@ -105,9 +125,6 @@ func Test_dao_update_when_connection_work_success_we_have_correct_result_questio
 
     _ = dao.Update(qIn)
 
-    if !c.AssertNumberOfCalls(t, "Save", 1) {
-        t.Fail()
-    }
     assert.Equal(t, qExpected, qIn, "Результируещий объект question не содержит изменения из connection")
 }
 
@@ -121,9 +138,6 @@ func Test_dao_update_when_connection_work_wrong_result_error_not_empty_and_have_
 
     errResult := dao.Update(qIn)
 
-    if !c.AssertNumberOfCalls(t, "Save", 1) {
-        t.Fail()
-    }
     require.NotNil(t, errResult, "Возвращаемая ошибка не должна быть пустой")
     assert.ErrorIs(t, errResult, connectionErr, "Возвращаемая ошибка должна содержать информацию из connection")
 }
@@ -131,6 +145,23 @@ func Test_dao_update_when_connection_work_wrong_result_error_not_empty_and_have_
 // ----------------
 // ---- Delete ----
 // ----------------
+
+func Test_dao_delete_connection_calls_is_correct(t *testing.T) {
+    q := &questions.Question{}
+    conds := []interface{}{uint64(1)}
+
+    c := &gorm.ConnectionMock{}
+    c.On("Delete", q, conds).Return(c)
+    dao := &dao{c: c}
+
+    _ = dao.Delete(conds...)
+
+    deleteCalls := 1
+    if !c.AssertNumberOfCalls(t, "Delete", deleteCalls) {
+        t.Errorf("Метод Delete у connection должен вызваться %d раз", deleteCalls)
+        t.Fail()
+    }
+}
 
 func Test_dao_delete_when_connection_work_success_result_error_is_empty(t *testing.T) {
     q := &questions.Question{}
@@ -142,9 +173,6 @@ func Test_dao_delete_when_connection_work_success_result_error_is_empty(t *testi
 
     errResult := dao.Delete(conds...)
 
-    if !c.AssertNumberOfCalls(t, "Delete", 1) {
-        t.Fail()
-    }
     assert.Nil(t, errResult, "Возвращаемая ошибка должна быть пустой")
 }
 
@@ -159,9 +187,6 @@ func Test_dao_delete_when_connection_work_wrong_result_error_not_empty_and_have_
 
     errResult := dao.Delete(conds...)
 
-    if !c.AssertNumberOfCalls(t, "Delete", 1) {
-        t.Fail()
-    }
     require.NotNil(t, errResult, "Возвращаемая ошибка не должна быть пустой")
     assert.ErrorIs(t, errResult, connectionErr, "Возвращаемая ошибка должна содержать информацию из connection")
 }
@@ -174,7 +199,7 @@ func Test_dao_find_when_dont_set_limit_offset_connection_calls_is_correct(t *tes
     var conds []interface{}
 
     c := &gorm.ConnectionMock{}
-    c.On("Find", &[]questions.Question{}, conds).Return(&gorm.ConnectionMock{})
+    c.On("Find", &[]questions.Question{}, conds).Return(c)
     dao := &dao{c: c}
 
     _, _, _ = dao.Find(0, 0, conds...)
@@ -188,18 +213,14 @@ func Test_dao_find_when_dont_set_limit_and_set_offset_connection_calls_is_correc
     var conds []interface{}
     offset := 1
 
-    cFind := &gorm.ConnectionMock{}
-    cFind.On("Find", &[]questions.Question{}, conds).Return(&gorm.ConnectionMock{})
     c := &gorm.ConnectionMock{}
-    c.On("Offset", offset).Return(cFind)
+    c.On("Find", &[]questions.Question{}, conds).Return(c)
+    c.On("Offset", offset).Return(c)
     dao := &dao{c: c}
 
     _, _, _ = dao.Find(0, offset, conds...)
 
-    cFind.AssertNumberOfCalls(t, "Find", 1)
-    cFind.AssertNumberOfCalls(t, "Limit", 0)
-    cFind.AssertNumberOfCalls(t, "Offset", 0)
-    c.AssertNumberOfCalls(t, "Find", 0)
+    c.AssertNumberOfCalls(t, "Find", 1)
     c.AssertNumberOfCalls(t, "Limit", 0)
     c.AssertNumberOfCalls(t, "Offset", 1)
 }
@@ -208,18 +229,14 @@ func Test_dao_find_when_dont_set_offset_and_set_limit_connection_calls_is_correc
     var conds []interface{}
     limit := 1
 
-    cFind := &gorm.ConnectionMock{}
-    cFind.On("Find", &[]questions.Question{}, conds).Return(&gorm.ConnectionMock{})
     c := &gorm.ConnectionMock{}
-    c.On("Limit", limit+1).Return(cFind)
+    c.On("Limit", limit+1).Return(c)
+    c.On("Find", &[]questions.Question{}, conds).Return(c)
     dao := &dao{c: c}
 
     _, _, _ = dao.Find(limit, 0, conds...)
 
-    cFind.AssertNumberOfCalls(t, "Find", 1)
-    cFind.AssertNumberOfCalls(t, "Limit", 0)
-    cFind.AssertNumberOfCalls(t, "Offset", 0)
-    c.AssertNumberOfCalls(t, "Find", 0)
+    c.AssertNumberOfCalls(t, "Find", 1)
     c.AssertNumberOfCalls(t, "Limit", 1)
     c.AssertNumberOfCalls(t, "Offset", 0)
 }
@@ -229,25 +246,26 @@ func Test_dao_find_when_set_limit_and_offset_connection_calls_is_correct(t *test
     limit := 1
     offset := 1
 
-    cFind := &gorm.ConnectionMock{}
-    cFind.On("Find", &[]questions.Question{}, conds).Return(&gorm.ConnectionMock{})
-    cOffset := &gorm.ConnectionMock{}
-    cOffset.On("Offset", offset).Return(cFind)
     c := &gorm.ConnectionMock{}
-    c.On("Limit", limit+1).Return(cOffset)
+    c.On("Limit", limit+1).Return(c)
+    c.On("Offset", offset).Return(c)
+    c.On("Find", &[]questions.Question{}, conds).Return(c)
     dao := &dao{c: c}
 
     _, _, _ = dao.Find(limit, offset, conds...)
 
-    cFind.AssertNumberOfCalls(t, "Find", 1)
-    cFind.AssertNumberOfCalls(t, "Limit", 0)
-    cFind.AssertNumberOfCalls(t, "Offset", 0)
-    cOffset.AssertNumberOfCalls(t, "Find", 0)
-    cOffset.AssertNumberOfCalls(t, "Limit", 0)
-    cOffset.AssertNumberOfCalls(t, "Offset", 1)
-    c.AssertNumberOfCalls(t, "Find", 0)
-    c.AssertNumberOfCalls(t, "Limit", 1)
-    c.AssertNumberOfCalls(t, "Offset", 0)
+    findCalls := 1
+    limitCalls := 1
+    offsetCalls := 1
+    if !c.AssertNumberOfCalls(t, "Find", findCalls) {
+        t.Errorf("Метод Find у connection должен вызваться %d раз", findCalls)
+    }
+    if !c.AssertNumberOfCalls(t, "Limit", limitCalls) {
+        t.Errorf("Метод Limit у connection должен вызваться %d раз", limitCalls)
+    }
+    if !c.AssertNumberOfCalls(t, "Offset", offsetCalls) {
+        t.Errorf("Метод Offset у connection должен вызваться %d раз", offsetCalls)
+    }
 }
 
 func Test_dao_find_when_we_have_not_more_then_limit_records_in_connection_result_more_is_false(t *testing.T) {
