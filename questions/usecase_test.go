@@ -310,8 +310,8 @@ func Test_usecase_find_dao_work_wrong_result_error_not_empty_and_have_info_from_
 func Test_usecase_find_when_dao_work_success_result_is_data_from_dao(t *testing.T) {
 	qlExpected := &[]Question{{ID: 1}, {ID: 2}, {ID: 3}}
 	moreExpected := true
-	conds := []interface{}{}
-	order := []interface{}{}
+	var conds []interface{}
+	var order []interface{}
 	limit := 1
 	offset := 1
 
