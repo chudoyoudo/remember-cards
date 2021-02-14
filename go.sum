@@ -13,6 +13,8 @@ github.com/chudoyoudo/gorm-interface v0.3.1 h1:osTzkHjiJJxzyUd7U51Bl/A/QhllcjpD/
 github.com/chudoyoudo/gorm-interface v0.3.1/go.mod h1://svWkMN0pP34ZJnJpp2XioGUpSzXI3bAlLdIoLtCIE=
 github.com/chudoyoudo/gorm-interface v0.3.2 h1:Sc1ZNuuQaSJOC/nOwzP8KC782jbvXF9/HV+BbTs/ZLE=
 github.com/chudoyoudo/gorm-interface v0.3.2/go.mod h1://svWkMN0pP34ZJnJpp2XioGUpSzXI3bAlLdIoLtCIE=
+github.com/chudoyoudo/gorm-interface v0.4.0 h1:sBzXyVmuiRKKrRBqqLp6HIEczRdpV1MKrvLqtbGtBSg=
+github.com/chudoyoudo/gorm-interface v0.4.0/go.mod h1://svWkMN0pP34ZJnJpp2XioGUpSzXI3bAlLdIoLtCIE=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cockroachdb/apd v1.1.0/go.mod h1:8Sl8LxpKi29FqWXR16WEFZRNSz3SoPzUzeMeY4+DwBQ=
 github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e/go.mod h1:F5haX7vjVVG0kc13fIWeqUViNPyEJxv/OmvnBo0Yme4=

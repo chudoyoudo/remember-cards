@@ -38,28 +38,25 @@ func (dao *dao) Delete(conds ...interface{}) error {
     return nil
 }
 
-func (dao *dao) Find(limit, offset int, conds ...interface{}) (list *[]questions.Question, more bool, err error) {
+func (dao *dao) Find(conds []interface{}, order []interface{}, limit, offset int) (list *[]questions.Question, more bool, err error) {
     ql := []questions.Question{}
     c := dao.getConnection()
-    var result gorm.Connection
 
     if limit > 0 {
-        limit++
+        c = c.Limit(limit + 1)
     }
 
-    if limit == 0 && offset == 0 {
-        result = c.Find(&ql, conds...)
-    } else if limit == 0 && offset != 0 {
-        result = c.Offset(offset).Find(&ql, conds...)
-    } else if limit != 0 && offset == 0 {
-        result = c.Limit(limit).Find(&ql, conds...)
-    } else {
-        result = c.Limit(limit).Offset(offset).Find(&ql, conds...)
+    if offset > 0 {
+        c = c.Offset(offset)
     }
 
-    if limit > 0 {
-        limit--
+    if len(order) > 0 {
+        for _, o := range order {
+            c = c.Order(o)
+        }
     }
+
+    result := c.Find(&ql, conds...)
 
     err = result.Error()
     if err != nil {
