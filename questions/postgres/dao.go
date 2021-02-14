@@ -17,7 +17,6 @@ func (dao *dao) Create(q *questions.Question) error {
     if err != nil {
         return errors.Wrapf(err, "Can't create question via gorm %v", *q)
     }
-
     return nil
 }
 
