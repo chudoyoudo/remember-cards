@@ -69,7 +69,7 @@ func (dao *dao) Find(limit, offset int, conds ...interface{}) (list *[]questions
 
     more = false
     if limit > 0 && len(ql) >= limit+1 {
-        ql = ql[:len(ql)-1]
+        ql = ql[:limit]
         more = true
     }
 
