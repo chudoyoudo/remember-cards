@@ -65,15 +65,14 @@ func (u *usecase) getNow() time.Time {
 
 func (u *usecase) getRepeatTime(step uint8) time.Time {
 	now := u.getNow()
-	//switch step {
-	//case 1:
-	//	return now.Add(time.Minute * 30)
-	//case 2:
-	//	return now.Add(time.Hour * 24 * 14)
-	//case 3:
-	//	return now.Add(time.Hour * 24 * 60)
-	//default:
-	//	return now.Add(time.Hour * 24 * 90)
-	//}
-	return now.Add(time.Minute * 30)
+	switch step {
+	case 1:
+		return now.Add(time.Minute * 30)
+	case 2:
+		return now.Add(time.Hour * 24 * 14)
+	case 3:
+		return now.Add(time.Hour * 24 * 60)
+	default:
+		return now.Add(time.Hour * 24 * 90)
+	}
 }
