@@ -12,7 +12,7 @@ import (
 
     "github.com/chudoyoudo/remember-cards/questions"
     question_gin "github.com/chudoyoudo/remember-cards/questions/gin"
-    _ "github.com/chudoyoudo/remember-cards/questions/postgres"
+    _ "github.com/chudoyoudo/remember-cards/questions/gorm"
 )
 
 func init() {

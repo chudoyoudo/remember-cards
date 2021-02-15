@@ -19,6 +19,12 @@ github.com/chudoyoudo/gorm-interface v0.5.0 h1:ovAFrFpVVwcz2npX1oJUibbXjyAofzRO2
 github.com/chudoyoudo/gorm-interface v0.5.0/go.mod h1://svWkMN0pP34ZJnJpp2XioGUpSzXI3bAlLdIoLtCIE=
 github.com/chudoyoudo/gorm-interface v0.6.0 h1:2iOCfwqsNK5MdVs51/0ucWxxM0WHdUWw4LUEKpaFy5I=
 github.com/chudoyoudo/gorm-interface v0.6.0/go.mod h1://svWkMN0pP34ZJnJpp2XioGUpSzXI3bAlLdIoLtCIE=
+github.com/chudoyoudo/rest-api-response-formatter v0.1.0 h1:/pZ0wTOjjXWBITVsizy8h8sARpQkckwKQQhvDtYagUI=
+github.com/chudoyoudo/rest-api-response-formatter v0.1.0/go.mod h1:ScO256DHjah/vKL4ZESJdVSq8nKwCnPNsR2Ly3mZ1vI=
+github.com/chudoyoudo/rest-api-response-formatter v0.2.0 h1:uhxhXbEhXDXwtWUXb6bmdLFlg8+RmaCcar03HW2or0U=
+github.com/chudoyoudo/rest-api-response-formatter v0.2.0/go.mod h1:ScO256DHjah/vKL4ZESJdVSq8nKwCnPNsR2Ly3mZ1vI=
+github.com/chudoyoudo/rest-api-response-formatter v0.3.0 h1:ivO4Q5iOQIYHXCd0KWVbX/YbR+fuUkAx4SOgQCSAWbI=
+github.com/chudoyoudo/rest-api-response-formatter v0.3.0/go.mod h1:Wi/NBFusmUWuufUMFCCINNpktPhKGV/vaqbE4gKQ7TQ=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cockroachdb/apd v1.1.0/go.mod h1:8Sl8LxpKi29FqWXR16WEFZRNSz3SoPzUzeMeY4+DwBQ=
 github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e/go.mod h1:F5haX7vjVVG0kc13fIWeqUViNPyEJxv/OmvnBo0Yme4=

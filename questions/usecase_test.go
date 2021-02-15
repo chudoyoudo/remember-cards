@@ -144,7 +144,7 @@ func Test_usecase_add_when_dao_work_success_result_question_contains_data_from_d
 // ---- Correct ----
 // -----------------
 
-var correctFields = []string{questionGroupId, questionTitle, questionBody}
+var correctFields = []string{QuestionGroupId, questionTitle, questionBody}
 
 func Test_usecase_correct_dao_calls_is_correct(t *testing.T) {
 	qIn := &Question{}

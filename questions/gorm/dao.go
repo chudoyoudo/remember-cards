@@ -1,4 +1,4 @@
-package postgres
+package gorm
 
 import (
 	gorm "github.com/chudoyoudo/gorm-interface"

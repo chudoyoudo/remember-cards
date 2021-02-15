@@ -42,7 +42,7 @@ func (u *usecase) Add(q *Question) error {
 
 func (u *usecase) Correct(q *Question) error {
 	dao := u.getDao()
-	fields := []string{questionGroupId, questionTitle, questionBody}
+	fields := []string{QuestionGroupId, questionTitle, questionBody}
 	err := dao.Update(q, fields)
 	if err != nil {
 		return errors.Wrap(err, "Can't update question via dao")
