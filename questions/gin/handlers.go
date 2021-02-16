@@ -66,7 +66,7 @@ func listHandler(c *gin.Context) {
     f := &filter{}
     if err := c.ShouldBindQuery(f); err != nil {
         errData := errors_formatter.FormatErrors(err)
-        response := rest_api_response_formatter.GetResponseData([]interface{}{}, &errData)
+        response := rest_api_response_formatter.GetResponseData(&struct{}{}, &errData)
         c.Negotiate(http.StatusBadRequest, *getNegotiate(response))
         return
     }
@@ -112,7 +112,7 @@ func addHandler(c *gin.Context) {
     d := &questionData{}
     if err := c.Bind(d); err != nil {
         errData := errors_formatter.FormatErrors(err)
-        response := rest_api_response_formatter.GetResponseData([]interface{}{}, &errData)
+        response := rest_api_response_formatter.GetResponseData(&struct{}{}, &errData)
         c.Negotiate(http.StatusBadRequest, *getNegotiate(response))
         return
     }
@@ -149,7 +149,7 @@ func correctHandler(c *gin.Context) {
     d := &questionData{}
     if err := c.Bind(d); err != nil {
         errData := errors_formatter.FormatErrors(err)
-        response := rest_api_response_formatter.GetResponseData([]interface{}{}, &errData)
+        response := rest_api_response_formatter.GetResponseData(struct{}{}, &errData)
         c.Negotiate(http.StatusBadRequest, *getNegotiate(response))
         return
     }
@@ -187,7 +187,7 @@ func deleteHandler(c *gin.Context) {
         return
     }
 
-    response := rest_api_response_formatter.GetResponseData(*q, &map[string][]string{})
+    response := rest_api_response_formatter.GetResponseData(&struct{}{}, &map[string][]string{})
     c.Negotiate(http.StatusOK, *getNegotiate(response))
 }
 
