@@ -40,7 +40,7 @@ func (dao *dao) Delete(conds ...interface{}) error {
 	return nil
 }
 
-func (dao *dao) Find(conds []interface{}, order []interface{}, limit, offset int) (list *[]questions.Question, more bool, err error) {
+func (dao *dao) Find(conds *map[string]interface{}, order *[]interface{}, limit, offset int) (list *[]questions.Question, more bool, err error) {
 	ql := []questions.Question{}
 	c := dao.getConnection()
 
@@ -52,13 +52,13 @@ func (dao *dao) Find(conds []interface{}, order []interface{}, limit, offset int
 		c = c.Offset(offset)
 	}
 
-	if len(order) > 0 {
-		for _, o := range order {
+	if len(*order) > 0 {
+		for _, o := range *order {
 			c = c.Order(o)
 		}
 	}
 
-	result := c.Find(&ql, conds...)
+	result := c.Find(&ql, *conds)
 
 	err = result.Error()
 	if err != nil {

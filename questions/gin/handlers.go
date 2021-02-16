@@ -1,7 +1,6 @@
 package gin
 
 import (
-    "fmt"
     "math"
     "net/http"
     "strconv"
@@ -66,16 +65,14 @@ type filter struct {
     Offset  int      `form:"offset"`
 }
 
-//TODO: Переделать на мапу вместо слайса пустых интерфейсов
-func (f *filter) ToConds() *[]interface{} {
-    result := []interface{}{}
+func (f *filter) ToConds() *map[string]interface{} {
+    result := map[string]interface{}{}
 
-    if len(f.GroupId) > 0 && len(f.UserId) > 0 {
-        result = append(result, fmt.Sprintf("\"%s\" in ? and \"%s\" in ?", questions.QuestionGroupId, questions.QuestionUserId), f.GroupId, f.UserId)
-    } else if len(f.GroupId) > 0 && len(f.UserId) == 0 {
-        result = append(result, fmt.Sprintf("\"%s\" in ?", questions.QuestionGroupId), f.GroupId)
-    } else if len(f.GroupId) > 0 && len(f.UserId) > 0 {
-        result = append(result, fmt.Sprintf("\"%s\" in ?", questions.QuestionUserId), f.UserId)
+    if len(f.GroupId) > 0 {
+        result[questions.QuestionGroupId] = f.GroupId
+    }
+    if len(f.UserId) > 0 {
+        result[questions.QuestionUserId] = f.UserId
     }
 
     return &result
@@ -91,9 +88,9 @@ func listHandler(c *gin.Context) {
     }
 
     conds := f.ToConds()
-    order := []interface{}{"id desc"}
+    order := &[]interface{}{"id desc"}
     uc := getUsecase()
-    ql, more, err := getQuestionList(uc, *conds, order, f.Limit, f.Offset)
+    ql, more, err := getQuestionList(uc, conds, order, f.Limit, f.Offset)
     if err != nil {
         log.Error(errors.Wrap(err, "Can't get question list"))
         c.AbortWithStatus(http.StatusInternalServerError)
@@ -251,7 +248,7 @@ func deleteQuestion(uc questions.Usecase, q *questions.Question) error {
 }
 
 func getQuestion(uc questions.Usecase, id uint64) (*questions.Question, error) {
-    ql, _, err := uc.Find([]interface{}{"id=?", id}, []interface{}{}, 1, 0)
+    ql, _, err := uc.Find(&map[string]interface{}{"id": id}, &[]interface{}{}, 1, 0)
     if err != nil {
         return nil, errors.Wrapf(err, "Can't get question by id %d via usecase", id)
     }
@@ -263,7 +260,7 @@ func getQuestion(uc questions.Usecase, id uint64) (*questions.Question, error) {
     return &(*ql)[0], nil
 }
 
-func getQuestionList(uc questions.Usecase, conds, order []interface{}, limit, offset int) (list *[]questions.Question, more bool, err error) {
+func getQuestionList(uc questions.Usecase, conds *map[string]interface{}, order *[]interface{}, limit, offset int) (list *[]questions.Question, more bool, err error) {
     ql, more, err := uc.Find(conds, order, limit, offset)
     if err != nil {
         return nil, false, errors.Wrapf(err, "Can't get question list by conds: %v order: %v limit: %d offset: %d via usecase", conds, order, limit, offset)
