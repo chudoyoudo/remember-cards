@@ -66,7 +66,7 @@ func Test_usecase_add_when_dao_work_success_result_error_is_empty(t *testing.T) 
     assert.Nil(t, errResult, "Возвращаемая ошибка должна быть пустой")
 }
 
-func Test_usecase_add_dao_work_wrong_result_error_not_empty_and_have_info_from_connection(t *testing.T) {
+func Test_usecase_add_dao_work_wrong_result_error_not_empty_and_have_info_from_dao(t *testing.T) {
     qIn := &Question{}
     daoErr := errors.New("Dao mock error")
 
@@ -174,7 +174,7 @@ func Test_usecase_correct_when_dao_work_success_result_error_is_empty(t *testing
     assert.Nil(t, errResult, "Возвращаемая ошибка должна быть пустой")
 }
 
-func Test_usecase_correct_dao_work_wrong_result_error_not_empty_and_have_info_from_connection(t *testing.T) {
+func Test_usecase_correct_dao_work_wrong_result_error_not_empty_and_have_info_from_dao(t *testing.T) {
     qIn := &Question{}
     daoErr := errors.New("Dao mock error")
 
@@ -235,7 +235,7 @@ func Test_usecase_delete_when_dao_work_success_result_error_is_empty(t *testing.
     assert.Nil(t, errResult, "Возвращаемая ошибка должна быть пустой")
 }
 
-func Test_usecase_delete_dao_work_wrong_result_error_not_empty_and_have_info_from_connection(t *testing.T) {
+func Test_usecase_delete_dao_work_wrong_result_error_not_empty_and_have_info_from_dao(t *testing.T) {
     conds := []interface{}{"id=?", 1}
     daoErr := errors.New("Dao mock error")
 
@@ -289,7 +289,7 @@ func Test_usecase_find_when_dao_work_success_result_error_is_empty(t *testing.T)
     assert.Nil(t, errResult, "Возвращаемая ошибка должна быть пустой")
 }
 
-func Test_usecase_find_dao_work_wrong_result_error_not_empty_and_have_info_from_connection(t *testing.T) {
+func Test_usecase_find_dao_work_wrong_result_error_not_empty_and_have_info_from_dao(t *testing.T) {
     daoErr := errors.New("Dao mock error")
     var ql *[]Question
     conds := &map[string]interface{}{"id": 1}

@@ -1,7 +1,6 @@
 package gin
 
 import (
-    "math"
     "net/http"
     "strconv"
 
@@ -26,35 +25,20 @@ func RegisterHandlers(r *gin.Engine, middleware ...gin.HandlerFunc) {
 }
 
 type questionData struct {
-    Title   interface{} `json:"title" binding:"required"`
-    Body    interface{} `json:"body" binding:"required"`
-    GroupId interface{} `json:"groupId" binding:"required,numeric"`
+    Title   string `json:"title" binding:"required"`
+    Body    string `json:"body" binding:"required"`
+    GroupId uint64 `json:"groupId" binding:"required"`
 }
 
 func (d *questionData) Bind(q *questions.Question) {
-    title, ok := d.Title.(string)
-    if ok {
-        q.Title = title
+    if d.Title != "" {
+        q.Title = d.Title
     }
-
-    body, ok := d.Body.(string)
-    if ok {
-        q.Body = body
+    if d.Body != "" {
+        q.Body = d.Body
     }
-
-    fGroupId, ok := d.GroupId.(float64)
-    if ok {
-        q.GroupId = uint64(math.Round(fGroupId))
-    } else {
-        sGroupId, ok := d.GroupId.(string)
-        if ok {
-            groupId, err := strconv.Atoi(sGroupId)
-            if err != nil || groupId < 0 {
-                log.Error(errors.Wrapf(err, "Can't convert question's groupId to int [%s]", sGroupId))
-            } else {
-                q.GroupId = uint64(groupId)
-            }
-        }
+    if d.GroupId != 0 {
+        q.GroupId = d.GroupId
     }
 }
 
